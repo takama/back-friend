@@ -16,7 +16,6 @@ amount of points
 ```sh
 PUT /api/v1alpha/players/:id/fund
 {"points": 300}
-response http codes: 201, 404, 400, 500
 ```
 
 Takes 300 points from player account
@@ -24,7 +23,6 @@ Takes 300 points from player account
 ```sh
 PUT /api/v1alpha/players/:id/take
 {"points": 300}
-response http codes: 201, 404, 400, 500
 ```
 
 Player balance
@@ -32,7 +30,6 @@ Player balance
 ```sh
 GET /api/v1alpha/players/:id
 {"player": "p1", "balance": 456.00}
-response http codes: 200, 404, 500
 ```
 
 Players balances
@@ -40,7 +37,6 @@ Players balances
 ```sh
 GET /api/v1alpha/players
 [{"player": "p1", "balance": 456.00}, {"player": "p2", "balance": 300.00}]
-response http codes: 200, 500
 ```
 
 ## Tournaments endpoints: /api/v1alpha/tournaments
@@ -50,7 +46,6 @@ Announce tournament specifying the entry deposit
 ```sh
 POST /api/v1alpha/tournaments/:id/announce
 {"deposit": 1000}
-response http codes: 201, 404, 400, 500
 ```
 
 Join player into a tournament and is he backed by a set of backers
@@ -58,7 +53,6 @@ Join player into a tournament and is he backed by a set of backers
 ```sh
 PUT /api/v1alpha/tournaments/:id/join
 {"player": "p1", "backers": ["p2", "p3"]}
-response http codes: 201, 404, 400, 500
 ```
 
 Result tournament winners and prizes
@@ -66,7 +60,6 @@ Result tournament winners and prizes
 ```sh
 POST /api/v1alpha/tournaments/:id
 {winners": [{"player": "p1", "prize": 2000.00}]}
-response http codes: 201, 404, 400, 500
 ```
 
 Get results of tournament winners and prizes
@@ -74,7 +67,6 @@ Get results of tournament winners and prizes
 ```sh
 GET /api/v1alpha/tournaments/:id
 {"tournament": 1, "winners": [{"player": "p1", "prize": 2000.00}]}
-reponse http codes: 200, 404, 400, 500
 ```
 
 Get results of tournaments
@@ -82,7 +74,6 @@ Get results of tournaments
 ```sh
 GET /api/v1alpha/tournaments
 [{"tournament": 1, "winners": [{"player": "p1", "prize": 2000.00}]}, {"tournament": 2, "winners": [{"player": "p1", "prize": 1000.00}, {"player": "p2", "prize": 1000.00}]}]
-response http codes: 200, 500
 ```
 
 ## Engine endpoints
@@ -91,7 +82,6 @@ Reset the engine (database)
 
 ```sh
 PUT /api/v1alpha/engine/reset
-response http codes: 201, 500
 ```
 
 ## Service endpoints
@@ -101,19 +91,16 @@ Service info and current statuses
 ```sh
 GET /info
 {"version": "v0.1.0", "uptime": "1d 3h"}
-response http codes: 200, 500
 ```
 
 Service health
 
 ```sh
 GET /healthz
-response http codes: 200, 500
 ```
 
 Service readiness
 
 ```sh
 GET /readyz
-response http codes: 200, 500
 ```
