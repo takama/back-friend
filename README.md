@@ -8,7 +8,7 @@ Back a friend service: used [backer](https://github.com/takama/backer) package/l
 2. The project is used simplest `JSON` response without additional parameters like request attributes, totals and durations
 3. The players and the tournaments could not be deleted
 
-## Players endpoints: /api/v1alpha/players
+### Players endpoints
 
 Funds (add to balance) player with 300 points. If no player exist should create new player with given
 amount of points
@@ -39,7 +39,7 @@ GET /api/v1alpha/players
 [{"player": "p1", "balance": 456.00}, {"player": "p2", "balance": 300.00}]
 ```
 
-## Tournaments endpoints: /api/v1alpha/tournaments
+### Tournaments endpoints
 
 Announce tournament specifying the entry deposit
 
@@ -76,7 +76,7 @@ GET /api/v1alpha/tournaments
 [{"tournament": 1, "winners": [{"player": "p1", "prize": 2000.00}]}, {"tournament": 2, "winners": [{"player": "p1", "prize": 1000.00}, {"player": "p2", "prize": 1000.00}]}]
 ```
 
-## Engine endpoints
+### Engine endpoints
 
 Reset the engine (database)
 
@@ -84,7 +84,7 @@ Reset the engine (database)
 PUT /api/v1alpha/engine/reset
 ```
 
-## Service endpoints
+### Service endpoints
 
 Service info and current statuses
 
