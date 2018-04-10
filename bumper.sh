@@ -30,10 +30,10 @@ echo -n "Please enter bumped version [$supposed_version]:"
 read new_version
 new_version=${new_version:-$supposed_version}
 
-if [[ $new_version =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+if [[ $new_version =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
     echo "Bumped version: $new_version"
 else
-    echo "Version is incorrect, please use X.X.X format (ie: 0.17.3)"
+    echo "Version is incorrect, please use vX.X.X format (ie: v0.17.3)"
     exit
 fi
 

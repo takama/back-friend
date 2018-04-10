@@ -7,8 +7,8 @@ PROJECT=github.com/takama/back-friend
 REGISTRY?=docker.io/takama
 CA_DIR?=certs
 
-# Use the 0.0.0 tag for testing, it shouldn't clobber any release builds
-RELEASE?=0.0.0
+# Use the v0.0.0 tag for testing, it shouldn't clobber any release builds
+RELEASE?=v0.0.0
 GOOS?=linux
 GOARCH?=amd64
 
