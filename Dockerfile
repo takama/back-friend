@@ -1,0 +1,12 @@
+FROM scratch
+
+ENV BACK_FRIEND_LOCAL_HOST 0.0.0.0
+ENV BACK_FRIEND_LOCAL_PORT 8080
+ENV BACK_FRIEND_LOG_LEVEL 1
+
+EXPOSE $BACK_FRIEND_LOCAL_PORT
+
+COPY certs /etc/ssl/certs/
+COPY bin/linux-amd64/backfriend /
+
+CMD ["/backfriend"]
