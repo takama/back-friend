@@ -5,7 +5,7 @@ import "github.com/kelseyhightower/envconfig"
 // Default values: path to config file, host, port, etc
 const (
 	// ServiceName contains a service name prefix which used in ENV variables
-	ServiceName = "backfriend"
+	ServiceName = "BACK_FRIEND"
 )
 
 // Config - Service configuration
