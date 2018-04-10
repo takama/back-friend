@@ -3,6 +3,7 @@ package config
 import (
 	"github.com/kelseyhightower/envconfig"
 	"github.com/takama/back-friend/pkg/helper"
+	"github.com/takama/back-friend/pkg/logger"
 )
 
 // Default values: host, port, etc
@@ -10,8 +11,9 @@ const (
 	// ServiceName contains a service name prefix which used in ENV variables
 	ServiceName = "BackFriend"
 
-	defaultHost = "0.0.0.0"
-	defaultPort = 8080
+	defaultHost     = "0.0.0.0"
+	defaultPort     = 8080
+	defaultLogLevel = logger.LevelInfo
 )
 
 // Config - Service configuration
@@ -20,6 +22,8 @@ type Config struct {
 	LocalHost string `split_words:"true"`
 	// Local service port
 	LocalPort int `split_words:"true"`
+	// Logging level in logger.Level notation
+	LogLevel logger.Level `split_words:"true"`
 }
 
 // New - returns new config record initialized with default values
@@ -27,6 +31,7 @@ func New() *Config {
 	return &Config{
 		LocalHost: defaultHost,
 		LocalPort: defaultPort,
+		LogLevel:  defaultLogLevel,
 	}
 }
 
