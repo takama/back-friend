@@ -6,9 +6,15 @@
   packages = ["."]
   revision = "b2c5c876e2659d9060d82e9b8494150d53854cc4"
 
+[[projects]]
+  name = "github.com/takama/bit"
+  packages = ["."]
+  revision = "2cdb1c532baced0c8c18000bc4cb66907b0dff3e"
+  version = "0.3.0"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "9e9928488f5ac2a92f53b14d0f96d8b835fd8c4aa8b3405c3756c7342bb7ed3c"
+  inputs-digest = "120be8e99a21a337b5290f2e50d36bf0aebc8f47bc3da2dd056e40dfd00c27df"
   solver-name = "gps-cdcl"
   solver-version = 1
