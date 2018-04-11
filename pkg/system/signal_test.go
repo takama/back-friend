@@ -5,8 +5,8 @@ import (
 	"syscall"
 	"testing"
 
-	"b17/pkg/logger"
-	"b17/pkg/logger/standard"
+	"github.com/takama/back-friend/pkg/logger"
+	"github.com/takama/back-friend/pkg/logger/stdlog"
 )
 
 const (
@@ -40,7 +40,7 @@ func (th testHandling) Shutdown() error {
 
 func TestSignals(t *testing.T) {
 	// Setup logger
-	log := standard.New(&logger.Config{
+	log := stdlog.New(&logger.Config{
 		Level: logger.LevelDebug,
 	})
 	pid := os.Getpid()
