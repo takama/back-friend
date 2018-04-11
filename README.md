@@ -1,5 +1,10 @@
 # Back a friend
 
+[![Build Status](https://travis-ci.org/takama/back-friend.svg?branch=master)](https://travis-ci.org/takama/back-friend)
+[![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/takama/back-friend/issues)
+[![Go Report Card](https://goreportcard.com/badge/github.com/takama/back-friend)](https://goreportcard.com/report/github.com/takama/back-friend)
+[![codecov](https://codecov.io/gh/takama/back-friend/branch/master/graph/badge.svg)](https://codecov.io/gh/takama/back-friend)
+
 Back a friend service: used [backer](https://github.com/takama/backer) package/library
 
 ## Known restrictions
@@ -168,3 +173,26 @@ Service readiness
 ```sh
 GET /readyz
 ```
+
+## Versioning automation
+
+Using a special script to increase the release version
+
+```sh
+./bumper.sh
+Current version v0.1.0.
+Please enter bumped version [v0.1.1]:
+```
+
+## Contributing to the project
+
+See the [contribution guidelines](docs/CONTRIBUTING.md) for information on how to
+participate in the project by submitting pull requests or issues.
+
+## Versioned changes
+
+All changes in the project located in [changelog](docs/CHANGELOG.md)
+
+## License
+
+[MIT Public License](https://github.com/takama/back-friend/blob/master/LICENSE)
