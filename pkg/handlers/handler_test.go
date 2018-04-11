@@ -13,7 +13,7 @@ import (
 )
 
 func TestRoot(t *testing.T) {
-	h := new(Handler)
+	h := New()
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		h.Base(h.Root)(bit.NewControl(w, r))
 	})
@@ -22,7 +22,7 @@ func TestRoot(t *testing.T) {
 }
 
 func TestNotFound(t *testing.T) {
-	h := new(Handler)
+	h := New()
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		h.Base(h.NotFound)(bit.NewControl(w, r))
 	})
@@ -45,4 +45,23 @@ func testHandler(t *testing.T, handler http.HandlerFunc, code int, body string) 
 	if trw.Body.String() != body {
 		t.Error("Expected body", body, "got", trw.Body.String())
 	}
+}
+
+func TestCollectCodes(t *testing.T) {
+	h := New()
+	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		h.Base(func(c bit.Control) {
+			c.Code(http.StatusBadGateway)
+			c.Body(http.StatusText(http.StatusBadGateway))
+		})(bit.NewControl(w, r))
+	})
+	testHandler(t, handler, http.StatusBadGateway, http.StatusText(http.StatusBadGateway))
+
+	handler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		h.Base(func(c bit.Control) {
+			c.Code(http.StatusNotFound)
+			c.Body(http.StatusText(http.StatusNotFound))
+		})(bit.NewControl(w, r))
+	})
+	testHandler(t, handler, http.StatusNotFound, http.StatusText(http.StatusNotFound))
 }
