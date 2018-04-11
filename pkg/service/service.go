@@ -28,7 +28,7 @@ func Run(cfg *config.Config) error {
 	}
 
 	// Define handlers
-	h := new(handlers.Handler)
+	h := handlers.New()
 
 	// Register new router
 	r := bit.NewRouter()
@@ -39,6 +39,8 @@ func Run(cfg *config.Config) error {
 	// Configure router
 	r.SetupMiddleware(h.Base)
 	r.GET("/", h.Root)
+	r.GET("/healthz", h.Health)
+	r.GET("/info", h.Info)
 
 	// Listen and serve handlers
 	go r.Listen(fmt.Sprintf("%s:%d", cfg.LocalHost, cfg.LocalPort))
