@@ -2,6 +2,20 @@
 
 ## v0.0.1
 
+### Codebase
+
+- Added `Travis CI` and `Codecov.io` ([#10](https://github.com/takama/back-friend/pull/10), [@takama](https://github.com/takama))
+- Added service information handler ([#10](https://github.com/takama/back-friend/pull/10), [@takama](https://github.com/takama))
+- Added health and readiness checks ([#10](https://github.com/takama/back-friend/pull/10), [@takama](https://github.com/takama))
+- Added router ([#10](https://github.com/takama/back-friend/pull/10), [@takama](https://github.com/takama))
+- Added logger ([#10](https://github.com/takama/back-friend/pull/10), [@takama](https://github.com/takama))
+
+### Configuration
+
+- Added `Makefile`, `Dockerfile` and vendors dependencies ([#9](https://github.com/takama/back-friend/pull/9), [@takama](https://github.com/takama))
+- Added service configuration from environment ([#9](https://github.com/takama/back-friend/pull/9), [@takama](https://github.com/takama))
+- Added packages structure, version automation ([#9](https://github.com/takama/back-friend/pull/9), [@takama](https://github.com/takama))
+
 ### Documentation
 
 - Added `Changelog` ([#7](https://github.com/takama/back-friend/pull/7), [@takama](https://github.com/takama))
