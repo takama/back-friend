@@ -12,7 +12,7 @@ const (
 	ServiceName = "BackFriend"
 
 	defaultHost     = "0.0.0.0"
-	defaultPort     = 8080
+	defaultPort     = 7117
 	defaultLogLevel = logger.LevelInfo
 )
 
