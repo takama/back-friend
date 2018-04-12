@@ -1,0 +1,38 @@
+version: '3'
+services:
+  cockroachdb:
+    container_name: backfriend_cockroachdb
+    image: cockroachdb/cockroach:v2.0.0
+    command: start --insecure --store=attrs=ssd,path=/var/lib/cockroach/
+    restart: always
+    volumes:
+      - data:/var/lib/cockroach
+    expose:
+      - "8080"
+      - "26257"
+    ports:
+      - "8080:8080"
+      - "26257:26257"
+  backfriend:
+    container_name: ${APP}-${NAMESPACE}
+    image: ${REGISTRY}/${APP}:${RELEASE}
+    entrypoint:
+      - /backfriend
+    restart: always
+    links:
+      - "cockroachdb:db"
+    depends_on:
+      - cockroachdb
+    expose:
+      - "${BACK_FRIEND_LOCAL_PORT}"
+    ports:
+      - "${BACK_FRIEND_LOCAL_PORT}:${BACK_FRIEND_LOCAL_PORT}"
+    environment:
+      - BACK_FRIEND_LOCAL_HOST=${BACK_FRIEND_LOCAL_HOST}
+      - BACK_FRIEND_LOCAL_PORT=${BACK_FRIEND_LOCAL_PORT}
+      - BACK_FRIEND_LOG_LEVEL=${BACK_FRIEND_LOG_LEVEL}
+      - BACK_FRIEND_DB_HOST=${BACK_FRIEND_DB_HOST}
+      - BACK_FRIEND_DB_PORT=${BACK_FRIEND_DB_PORT}
+      - BACK_FRIEND_DB_NAME=${BACK_FRIEND_DB_NAME}
+volumes:
+  data:

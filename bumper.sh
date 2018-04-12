@@ -26,21 +26,23 @@ old_version=$(grep RELEASE?= ./Makefile | sed -e 's/RELEASE?=\(.*\)/\1/g')
 supposed_version=$(echo $old_version | awk -F. '{$NF = $NF + 1;} 1' | sed 's/ /./g')
 
 echo "Current version $old_version."
-echo -n "Please enter bumped version [$supposed_version]:"
+echo -n "Please enter new version [$supposed_version]:"
 read new_version
 new_version=${new_version:-$supposed_version}
 
 if [[ $new_version =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-    echo "Bumped version: $new_version"
+    echo "Bumped new version: $new_version"
 else
     echo "Version is incorrect, please use vX.X.X format (ie: v0.17.3)"
     exit
 fi
 
 if [ "${GO_OS}" == "darwin" ]; then
+    sed -i '' -e "s/\(RELEASE=\).*/\1$new_version/" .env
     sed -i '' -e "s/\(RELEASE?=\).*/\1$new_version/" Makefile
     sed -i '' -e "s/\(# Version\)\(\s*\).*/\1 $new_version/" docs/CHANGELOG.md
 else
+    sed -i -e "s/\(RELEASE=\).*/\1$new_version/" .env
     sed -i -e "s/\(RELEASE?=\).*/\1$new_version/" Makefile
     sed -i -e "s/\(# Version\)\(\s*\).*/\1 $new_version/" docs/CHANGELOG.md
 fi
