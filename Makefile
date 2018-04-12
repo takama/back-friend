@@ -60,7 +60,7 @@ push: build
 	@echo "+ $@"
 	@docker push $(CONTAINER_IMAGE):$(RELEASE)
 
-run: build
+run: stop build
 	@echo "+ $@"
 	@docker-compose up -d
 	@sleep 3
@@ -97,7 +97,7 @@ cover:
 	@> coverage.txt
 	@go list -f '{{if len .TestGoFiles}}"go test -coverprofile={{.Dir}}/.coverprofile {{.ImportPath}} && cat {{.Dir}}/.coverprofile  >> coverage.txt"{{end}}' ${GO_LIST_FILES} | xargs -L 1 sh -c
 
-clean: stop
+clean:
 	@rm -f bin/${GOOS}-${GOARCH}/${APP}
 
 HAS_DEP := $(shell command -v dep;)
