@@ -4,7 +4,7 @@
 
 APP=backfriend
 PROJECT=github.com/takama/back-friend
-REGISTRY?=docker.io/takama
+REGISTRY?=takama
 CA_DIR?=certs
 
 # Use the v0.0.0 tag for testing, it shouldn't clobber any release builds
@@ -13,7 +13,7 @@ GOOS?=linux
 GOARCH?=amd64
 
 BACK_FRIEND_LOCAL_HOST?=0.0.0.0
-BACK_FRIEND_LOCAL_PORT?=8080
+BACK_FRIEND_LOCAL_PORT?=7117
 BACK_FRIEND_LOG_LEVEL?=0
 
 # Namespace: dev, prod, release, cte, username ...
@@ -62,36 +62,17 @@ push: build
 
 run: build
 	@echo "+ $@"
-	@docker run --name ${CONTAINER_NAME} -p ${BACK_FRIEND_LOCAL_PORT}:${BACK_FRIEND_LOCAL_PORT} \
-		-e "BACK_FRIEND_LOCAL_HOST=${BACK_FRIEND_LOCAL_HOST}" \
-		-e "BACK_FRIEND_LOCAL_PORT=${BACK_FRIEND_LOCAL_PORT}" \
-		-e "BACK_FRIEND_LOG_LEVEL=${BACK_FRIEND_LOG_LEVEL}" \
-		-d $(CONTAINER_IMAGE):$(RELEASE)
-	@sleep 1
+	@docker-compose up -d
+	@sleep 3
 	@docker logs ${CONTAINER_NAME}
-
-HAS_RUNNED := $(shell docker ps | grep ${CONTAINER_NAME})
-HAS_EXITED := $(shell docker ps -a | grep ${CONTAINER_NAME})
 
 logs:
 	@echo "+ $@"
 	@docker logs ${CONTAINER_NAME}
 
 stop:
-ifdef HAS_RUNNED
 	@echo "+ $@"
-	@docker stop ${CONTAINER_NAME}
-endif
-
-start: stop
-	@echo "+ $@"
-	@docker start ${CONTAINER_NAME}
-
-rm:
-ifdef HAS_EXITED
-	@echo "+ $@"
-	@docker rm ${CONTAINER_NAME}
-endif
+	@docker-compose down
 
 GO_LIST_FILES=$(shell go list ${PROJECT}/... | grep -v vendor)
 
@@ -116,7 +97,7 @@ cover:
 	@> coverage.txt
 	@go list -f '{{if len .TestGoFiles}}"go test -coverprofile={{.Dir}}/.coverprofile {{.ImportPath}} && cat {{.Dir}}/.coverprofile  >> coverage.txt"{{end}}' ${GO_LIST_FILES} | xargs -L 1 sh -c
 
-clean: stop rm
+clean: stop
 	@rm -f bin/${GOOS}-${GOARCH}/${APP}
 
 HAS_DEP := $(shell command -v dep;)
@@ -130,4 +111,4 @@ ifndef HAS_LINT
 	go get -u github.com/golang/lint/golint
 endif
 
-.PHONY: all vendor build certs push run logs stop start rm fmt lint vet test cover clean bootstrap
+.PHONY: all vendor build certs push run logs stop fmt lint vet test cover clean bootstrap
