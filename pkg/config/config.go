@@ -24,6 +24,12 @@ type Config struct {
 	LocalPort int `split_words:"true"`
 	// Logging level in logger.Level notation
 	LogLevel logger.Level `split_words:"true"`
+	// Database host
+	DbHost string `split_words:"true"`
+	// Database port
+	DbPort int `split_words:"true"`
+	// Database name
+	DbName int `split_words:"true"`
 }
 
 // New - returns new config record initialized with default values
