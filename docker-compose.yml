@@ -3,10 +3,10 @@ services:
   cockroachdb:
     container_name: backfriend_cockroachdb
     image: cockroachdb/cockroach:v2.0.0
-    command: start --insecure --store=attrs=ssd,path=/var/lib/cockroach/
+    command: start --insecure --store=attrs=ssd,path=${BACK_FRIEND_DB_LOCATION}/
     restart: always
     volumes:
-      - data:/var/lib/cockroach
+      - data:${BACK_FRIEND_DB_LOCATION}
     expose:
       - "8080"
       - "26257"
@@ -19,6 +19,8 @@ services:
     entrypoint:
       - /backfriend
     restart: always
+    volumes:
+      - ./data:${BACK_FRIEND_DB_LOCATION}
     links:
       - "cockroachdb:db"
     depends_on:
