@@ -10,7 +10,7 @@ import (
 )
 
 func TestReady(t *testing.T) {
-	conn, _ := db.New(config.New())
+	conn, _, _ := db.New(config.New())
 	h := New(conn)
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		h.Base(h.Ready)(bit.NewControl(w, r))

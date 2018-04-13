@@ -7,9 +7,10 @@ type JSON struct {
 }
 
 // NewJSON creates new JSON structure that implements Driver interface
-func NewJSON(cfg *config.Config) (*JSON, error) {
-	json := new(JSON)
-	return json, nil
+func NewJSON(cfg *config.Config) (json *JSON, name string, err error) {
+	name = cfg.DbType
+	json = new(JSON)
+	return
 }
 
 // Ready returns DB state

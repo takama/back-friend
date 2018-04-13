@@ -14,7 +14,7 @@ import (
 )
 
 func TestRoot(t *testing.T) {
-	conn, _ := db.New(config.New())
+	conn, _, _ := db.New(config.New())
 	h := New(conn)
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		h.Base(h.Root)(bit.NewControl(w, r))
@@ -24,7 +24,7 @@ func TestRoot(t *testing.T) {
 }
 
 func TestNotFound(t *testing.T) {
-	conn, _ := db.New(config.New())
+	conn, _, _ := db.New(config.New())
 	h := New(conn)
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		h.Base(h.NotFound)(bit.NewControl(w, r))
@@ -51,7 +51,7 @@ func testHandler(t *testing.T, handler http.HandlerFunc, code int, body string) 
 }
 
 func TestCollectCodes(t *testing.T) {
-	conn, _ := db.New(config.New())
+	conn, _, _ := db.New(config.New())
 	h := New(conn)
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		h.Base(func(c bit.Control) {

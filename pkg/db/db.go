@@ -15,15 +15,15 @@ type Connection struct {
 }
 
 // New creates new database connection
-func New(cfg *config.Config) (conn *Connection, err error) {
+func New(cfg *config.Config) (conn *Connection, name string, err error) {
 	conn = new(Connection)
 	switch cfg.DbType {
 	case config.PGDriver:
-		conn.Driver, err = NewPostgreSQL(cfg)
+		conn.Driver, name, err = NewPostgreSQL(cfg)
 	case config.JSONDriver:
-		conn.Driver, err = NewJSON(cfg)
+		conn.Driver, name, err = NewJSON(cfg)
 	default:
-		conn.Driver, err = NewStub(cfg)
+		conn.Driver, name, err = NewStub(cfg)
 	}
 
 	return
