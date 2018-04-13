@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/takama/back-friend/pkg/config"
+	"github.com/takama/back-friend/pkg/db"
 	"github.com/takama/back-friend/pkg/handlers"
 	"github.com/takama/back-friend/pkg/logger"
 	"github.com/takama/back-friend/pkg/logger/stdlog"
@@ -27,8 +28,14 @@ func Run(cfg *config.Config) error {
 		log.Warnf("%s log level is used", logger.LevelDebug.String())
 	}
 
+	// Creates DB connection
+	conn, err := db.New(cfg)
+	if err != nil {
+		return err
+	}
+
 	// Define handlers
-	h := handlers.New()
+	h := handlers.New(conn)
 
 	// Register new router
 	r := bit.NewRouter()
@@ -40,6 +47,7 @@ func Run(cfg *config.Config) error {
 	r.SetupMiddleware(h.Base)
 	r.GET("/", h.Root)
 	r.GET("/healthz", h.Health)
+	r.GET("/readyz", h.Ready)
 	r.GET("/info", h.Info)
 
 	// Listen and serve handlers
