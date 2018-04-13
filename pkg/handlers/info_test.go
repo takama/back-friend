@@ -6,13 +6,16 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/takama/back-friend/pkg/config"
+	"github.com/takama/back-friend/pkg/db"
 	"github.com/takama/back-friend/pkg/version"
 
 	"github.com/takama/bit"
 )
 
 func TestInfo(t *testing.T) {
-	h := New()
+	conn, _ := db.New(config.New())
+	h := New(conn)
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		h.Base(h.Info)(bit.NewControl(w, r))
 	})

@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/takama/back-friend/pkg/config"
+	"github.com/takama/back-friend/pkg/db"
 	"github.com/takama/back-friend/pkg/version"
 
 	"github.com/takama/bit"
@@ -14,6 +15,7 @@ import (
 // Handler defines common part for all handlers
 type Handler struct {
 	maintenance bool
+	db          *db.Connection
 	stats       *stats
 }
 
@@ -23,8 +25,9 @@ type stats struct {
 }
 
 // New returns new instance of the Handler
-func New() *Handler {
+func New(conn *db.Connection) *Handler {
 	return &Handler{
+		db: conn,
 		stats: &stats{
 			requests:  new(Requests),
 			startTime: time.Now(),
