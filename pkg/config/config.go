@@ -46,6 +46,8 @@ type Config struct {
 	DbName string `split_words:"true"`
 	// Database username
 	DbUsername string `split_words:"true"`
+	// Database password
+	DbPassword string `split_words:"true"`
 }
 
 // New - returns new config record initialized with default values
