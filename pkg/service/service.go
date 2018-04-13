@@ -29,10 +29,12 @@ func Run(cfg *config.Config) error {
 	}
 
 	// Creates DB connection
-	conn, err := db.New(cfg)
+	conn, name, err := db.New(cfg)
 	if err != nil {
+		log.Error("Error connecting to database:", err)
 		return err
 	}
+	log.Infof("Database %s connected successful", name)
 
 	// Define handlers
 	h := handlers.New(conn)
