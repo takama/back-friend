@@ -2,6 +2,7 @@ package service
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/takama/back-friend/pkg/config"
 	"github.com/takama/back-friend/pkg/db"
@@ -25,7 +26,7 @@ func Run(cfg *config.Config) error {
 
 	log.Info("Version:", version.RELEASE)
 	if cfg.LogLevel == logger.LevelDebug {
-		log.Warnf("%s log level is used", logger.LevelDebug.String())
+		log.Warnf("%s log level is used", strings.Title(logger.LevelDebug.String()))
 	}
 
 	// Creates DB connection
