@@ -33,3 +33,8 @@ func New(cfg *config.Config, log logger.Logger) (conn *Connection, name string, 
 
 	return
 }
+
+// Ready returns connection state
+func (conn Connection) Ready() bool {
+	return conn.Driver.Ready()
+}

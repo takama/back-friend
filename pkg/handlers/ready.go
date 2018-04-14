@@ -8,9 +8,11 @@ import (
 
 // Ready returns "OK" if service is ready to serve traffic
 func (h *Handler) Ready(c bit.Control) {
-	// TODO: possible use cases:
-	// load data from a database, a message broker, any external services, etc
-
+	if !h.db.Ready() {
+		c.Code(http.StatusServiceUnavailable)
+		c.Body(http.StatusText(http.StatusServiceUnavailable))
+		return
+	}
 	c.Code(http.StatusOK)
 	c.Body(http.StatusText(http.StatusOK))
 }
