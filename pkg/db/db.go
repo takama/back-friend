@@ -25,6 +25,8 @@ func New(cfg *config.Config, log logger.Logger) (conn *Connection, name string, 
 		conn.Driver, name, err = NewPostgreSQL(cfg, log)
 	case config.JSONDriver:
 		conn.Driver, name, err = NewJSON(cfg, log)
+	case config.MockDriver:
+		conn.Driver, name, err = NewMock(cfg, log)
 	default:
 		conn.Driver, name, err = NewStub(cfg, log)
 	}

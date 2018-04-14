@@ -19,6 +19,9 @@ const (
 	// StubDriver defines driver name for testing
 	StubDriver = "stub"
 
+	// MockDriver defines driver name for testing
+	MockDriver = "mock"
+
 	// JSONDriver defines driver name for JSON files DB
 	JSONDriver = "json"
 
