@@ -181,7 +181,7 @@ Using a special script to increase the release version
 ```sh
 ./bumper.sh
 Current version v0.1.0.
-Please enter bumped version [v0.1.1]:
+Please enter new version [v0.1.1]:
 ```
 
 ## Contributing to the project
