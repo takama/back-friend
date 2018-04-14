@@ -8,15 +8,15 @@ import (
 
 	"github.com/takama/back-friend/pkg/config"
 	"github.com/takama/back-friend/pkg/db"
-	"github.com/takama/back-friend/pkg/logger"
-	"github.com/takama/back-friend/pkg/logger/stdlog"
 	"github.com/takama/back-friend/pkg/version"
 
 	"github.com/takama/bit"
 )
 
 func TestRoot(t *testing.T) {
-	conn, _, _ := db.New(config.New(), stdlog.New(new(logger.Config)))
+	conn := &db.Connection{
+		Driver: db.Stub{},
+	}
 	h := New(conn)
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		h.Base(h.Root)(bit.NewControl(w, r))
@@ -26,7 +26,9 @@ func TestRoot(t *testing.T) {
 }
 
 func TestNotFound(t *testing.T) {
-	conn, _, _ := db.New(config.New(), stdlog.New(new(logger.Config)))
+	conn := &db.Connection{
+		Driver: db.Stub{},
+	}
 	h := New(conn)
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		h.Base(h.NotFound)(bit.NewControl(w, r))
@@ -53,7 +55,9 @@ func testHandler(t *testing.T, handler http.HandlerFunc, code int, body string) 
 }
 
 func TestCollectCodes(t *testing.T) {
-	conn, _, _ := db.New(config.New(), stdlog.New(new(logger.Config)))
+	conn := &db.Connection{
+		Driver: db.Stub{},
+	}
 	h := New(conn)
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		h.Base(func(c bit.Control) {
