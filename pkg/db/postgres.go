@@ -6,6 +6,7 @@ import (
 	"net/url"
 
 	"github.com/takama/back-friend/pkg/config"
+	"github.com/takama/back-friend/pkg/logger"
 
 	"github.com/lib/pq"
 )
@@ -21,7 +22,7 @@ type PostgreSQL struct {
 }
 
 // NewPostgreSQL creates new PostgreSQL connection
-func NewPostgreSQL(cfg *config.Config) (pg *PostgreSQL, name string, err error) {
+func NewPostgreSQL(cfg *config.Config, log logger.Logger) (pg *PostgreSQL, name string, err error) {
 	name = cfg.DbType
 	dsn, err := url.Parse(fmt.Sprintf("postgres://%s:%s@%s:%d/%s?sslmode=disable",
 		cfg.DbUsername, cfg.DbPassword, cfg.DbHost, cfg.DbPort, cfg.DbName))
@@ -42,10 +43,11 @@ func NewPostgreSQL(cfg *config.Config) (pg *PostgreSQL, name string, err error) 
 		}
 		return nil, name, err
 	}
-	// Database has been created, it should migrate up
+	log.Infof("Database `%s` has been created. Running migration...", cfg.DbName)
 	if err = pg.MigrateUp(); err != nil {
 		return nil, name, err
 	}
+	log.Info("Migration has been done")
 	return pg, name, pg.pool.Ping()
 }
 

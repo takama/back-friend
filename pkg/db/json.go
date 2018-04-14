@@ -1,13 +1,16 @@
 package db
 
-import "github.com/takama/back-friend/pkg/config"
+import (
+	"github.com/takama/back-friend/pkg/config"
+	"github.com/takama/back-friend/pkg/logger"
+)
 
 // JSON implements JSON files driver
 type JSON struct {
 }
 
 // NewJSON creates new JSON structure that implements Driver interface
-func NewJSON(cfg *config.Config) (json *JSON, name string, err error) {
+func NewJSON(cfg *config.Config, log logger.Logger) (json *JSON, name string, err error) {
 	name = cfg.DbType
 	json = new(JSON)
 	return

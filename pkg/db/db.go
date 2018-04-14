@@ -1,6 +1,9 @@
 package db
 
-import "github.com/takama/back-friend/pkg/config"
+import (
+	"github.com/takama/back-friend/pkg/config"
+	"github.com/takama/back-friend/pkg/logger"
+)
 
 // Driver contains common DB methods
 type Driver interface {
@@ -15,15 +18,15 @@ type Connection struct {
 }
 
 // New creates new database connection
-func New(cfg *config.Config) (conn *Connection, name string, err error) {
+func New(cfg *config.Config, log logger.Logger) (conn *Connection, name string, err error) {
 	conn = new(Connection)
 	switch cfg.DbType {
 	case config.PGDriver:
-		conn.Driver, name, err = NewPostgreSQL(cfg)
+		conn.Driver, name, err = NewPostgreSQL(cfg, log)
 	case config.JSONDriver:
-		conn.Driver, name, err = NewJSON(cfg)
+		conn.Driver, name, err = NewJSON(cfg, log)
 	default:
-		conn.Driver, name, err = NewStub(cfg)
+		conn.Driver, name, err = NewStub(cfg, log)
 	}
 
 	return

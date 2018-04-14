@@ -29,7 +29,7 @@ func Run(cfg *config.Config) error {
 	}
 
 	// Creates DB connection
-	conn, name, err := db.New(cfg)
+	conn, name, err := db.New(cfg, log)
 	if err != nil {
 		log.Error("Could not establish database connection:", err)
 		return err

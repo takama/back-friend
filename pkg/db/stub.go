@@ -1,13 +1,16 @@
 package db
 
-import "github.com/takama/back-friend/pkg/config"
+import (
+	"github.com/takama/back-friend/pkg/config"
+	"github.com/takama/back-friend/pkg/logger"
+)
 
 // Stub implements Stub driver
 type Stub struct {
 }
 
 // NewStub creates new Stub structure that implements Driver interface
-func NewStub(cfg *config.Config) (stub *Stub, name string, err error) {
+func NewStub(cfg *config.Config, log logger.Logger) (stub *Stub, name string, err error) {
 	name = cfg.DbType
 	stub = new(Stub)
 	return
