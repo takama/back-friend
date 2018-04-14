@@ -25,6 +25,9 @@
   name = "github.com/kelseyhightower/envconfig"
   revision = "b2c5c876e2659d9060d82e9b8494150d53854cc4"
 
+[[constraint]]
+  name = "github.com/lib/pq"
+   revision = "d34b9ff171c21ad295489235aec8b6626023cd04"
 
 [[constraint]]
   name = "github.com/takama/bit"

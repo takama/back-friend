@@ -12,10 +12,6 @@ RELEASE?=v0.1.0
 GOOS?=linux
 GOARCH?=amd64
 
-BACK_FRIEND_LOCAL_HOST?=0.0.0.0
-BACK_FRIEND_LOCAL_PORT?=7117
-BACK_FRIEND_LOG_LEVEL?=0
-
 # Namespace: dev, prod, release, cte, username ...
 NAMESPACE?=dev
 
