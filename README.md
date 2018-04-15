@@ -12,6 +12,9 @@ Back a friend service: used [backer](https://github.com/takama/backer) package/l
 1. A several verifications of input attributes skipped due to complicating the task
 2. The project is used simplest `JSON` response without additional parameters like request attributes, totals and durations
 3. The players and the tournaments could not be deleted
+4. The points/money are not in separate transactional entity. This feature is skipped due to complicating the task.
+5. The database handlers are not asynchronous. It should be in high load systems.
+6. The package `context` is skipped due to complicating the task.
 
 ## Endpoints description
 
