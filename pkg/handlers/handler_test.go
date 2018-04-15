@@ -15,7 +15,8 @@ import (
 
 func TestRoot(t *testing.T) {
 	conn := &db.Connection{
-		Driver: db.Stub{},
+		Config:     config.New(),
+		Controller: new(db.Mock),
 	}
 	h := New(conn)
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -27,7 +28,8 @@ func TestRoot(t *testing.T) {
 
 func TestNotFound(t *testing.T) {
 	conn := &db.Connection{
-		Driver: db.Stub{},
+		Config:     config.New(),
+		Controller: new(db.Mock),
 	}
 	h := New(conn)
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -56,7 +58,8 @@ func testHandler(t *testing.T, handler http.HandlerFunc, code int, body string) 
 
 func TestCollectCodes(t *testing.T) {
 	conn := &db.Connection{
-		Driver: db.Stub{},
+		Config:     config.New(),
+		Controller: new(db.Mock),
 	}
 	h := New(conn)
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

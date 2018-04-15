@@ -11,6 +11,8 @@ const (
 	// ServiceName contains a service name prefix which used in ENV variables
 	ServiceName = "BackFriend"
 
+	APIVersion = "v1alpha"
+
 	defaultHost       = "0.0.0.0"
 	defaultPort       = 7117
 	defaultLogLevel   = logger.LevelInfo

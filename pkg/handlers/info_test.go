@@ -6,6 +6,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/takama/back-friend/pkg/config"
 	"github.com/takama/back-friend/pkg/db"
 	"github.com/takama/back-friend/pkg/version"
 
@@ -14,7 +15,8 @@ import (
 
 func TestInfo(t *testing.T) {
 	conn := &db.Connection{
-		Driver: db.Stub{},
+		Config:     config.New(),
+		Controller: new(db.Mock),
 	}
 	h := New(conn)
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
