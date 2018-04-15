@@ -4,13 +4,15 @@ import (
 	"net/http"
 	"testing"
 
+	"github.com/takama/back-friend/pkg/config"
 	"github.com/takama/back-friend/pkg/db"
 	"github.com/takama/bit"
 )
 
 func TestHealth(t *testing.T) {
 	conn := &db.Connection{
-		Driver: db.Stub{},
+		Config:     config.New(),
+		Controller: new(db.Mock),
 	}
 	h := New(conn)
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

@@ -4,13 +4,19 @@ import (
 	"net/http"
 	"testing"
 
+	"github.com/takama/back-friend/pkg/config"
 	"github.com/takama/back-friend/pkg/db"
 	"github.com/takama/bit"
 )
 
 func TestReady(t *testing.T) {
+	mock := &db.Mock{
+		OnReady: func() bool { return true },
+	}
 	conn := &db.Connection{
-		Driver: db.Stub{},
+		Config:     config.New(),
+		Controller: mock,
+		Store:      mock,
 	}
 	h := New(conn)
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -21,10 +27,13 @@ func TestReady(t *testing.T) {
 }
 
 func TestNotReady(t *testing.T) {
+	mock := &db.Mock{
+		OnReady: func() bool { return false },
+	}
 	conn := &db.Connection{
-		Driver: db.Mock{
-			OnReady: func() bool { return false },
-		},
+		Config:     config.New(),
+		Controller: mock,
+		Store:      mock,
 	}
 	h := New(conn)
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
