@@ -12,6 +12,12 @@
   revision = "d34b9ff171c21ad295489235aec8b6626023cd04"
 
 [[projects]]
+  name = "github.com/takama/backer"
+  packages = [".","datastore","helper","model","player"]
+  revision = "995c7fa15975cbcee4ab2d20f32773941936ca88"
+  version = "v0.3.1"
+
+[[projects]]
   name = "github.com/takama/bit"
   packages = ["."]
   revision = "2cdb1c532baced0c8c18000bc4cb66907b0dff3e"
@@ -20,6 +26,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "7cd26a043b1c8761abf3946ddec1d1d40d0f00d90589d3240d8cee4110abc40e"
+  inputs-digest = "ad6dbf4cd0297ab36b6dcf6d5432282ac5895f49873917caa72bb86ae2ab742a"
   solver-name = "gps-cdcl"
   solver-version = 1
