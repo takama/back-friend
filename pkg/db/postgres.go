@@ -2,6 +2,7 @@ package db
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"net/url"
 
@@ -13,15 +14,21 @@ import (
 )
 
 const (
-	// ErrorCodeDuplicateDatabase is code when create database but it already exists
-	ErrorCodeDuplicateDatabase = "42P04"
+	// errorCodeDuplicateDatabase is code when create database but it already exists
+	errorCodeDuplicateDatabase = "42P04"
 	queryGetPlayerBalance      = "SELECT balance FROM players WHERE id = $1"
 	queryInsertPlayer          = "INSERT INTO players (id) VALUES ($1)"
 	queryUpdatePlayer          = "UPDATE players SET balance = $1 WHERE id = $2"
+	queryInsertTournament      = "INSERT INTO tournaments (id) VALUES ($1)"
+	queryGetTournament         = "SELECT is_finished, deposit FROM tournaments WHERE id = $1"
+	queryUpdateTournament      = "UPDATE tournaments SET is_finished = $1, deposit = $2 WHERE id = $3"
+	queryUpsertBidder          = "UPSERT INTO bidders (player_id, tournament_id, winner, prize, backers) VALUES ($1, $2, $3, $4, $5)"
+	queryGetBidders            = "SELECT player_id, winner, prize, backers FROM bidders WHERE tournament_id = $1"
 )
 
 // PostgreSQL implements PostgreSQL driver
 type PostgreSQL struct {
+	logger.Logger
 	pool *sql.DB
 }
 
@@ -34,6 +41,7 @@ func NewPostgreSQL(cfg *config.Config, log logger.Logger) (pg *PostgreSQL, name 
 		return
 	}
 	pg = new(PostgreSQL)
+	pg.Logger = log
 	if pg.pool, err = sql.Open("postgres", dsn.String()); err != nil {
 		return nil, name, err
 	}
@@ -41,7 +49,7 @@ func NewPostgreSQL(cfg *config.Config, log logger.Logger) (pg *PostgreSQL, name 
 		return nil, name, err
 	}
 	if _, err := pg.pool.Exec(fmt.Sprintf("CREATE DATABASE %s", cfg.DbName)); err != nil {
-		if dbErr, ok := err.(*pq.Error); ok && dbErr.Code == ErrorCodeDuplicateDatabase {
+		if dbErr, ok := err.(*pq.Error); ok && dbErr.Code == errorCodeDuplicateDatabase {
 			// Database exists, there is no need to use migration
 			return pg, name, pg.pool.Ping()
 		}
@@ -87,10 +95,12 @@ func (pg PostgreSQL) NewPlayer(ID string, tx *sql.Tx) error {
 	if err != nil {
 		return err
 	}
+	defer stmt.Close()
 	_, err = stmt.Exec(ID)
 	if err != nil {
 		return err
 	}
+	pg.Logger.Debugf("Created a new player %s", ID)
 	return err
 }
 
@@ -108,26 +118,94 @@ func (pg PostgreSQL) SavePlayer(player *model.Player, tx *sql.Tx) error {
 	if err != nil {
 		return err
 	}
+	defer stmt.Close()
 	_, err = stmt.Exec(player.Balance, player.ID)
 	if err != nil {
 		return err
 	}
+	pg.Logger.Debugf("Saved the player %s", player.ID)
 	return err
 }
 
 // NewTournament creates a new tournament with specified ID
 func (pg PostgreSQL) NewTournament(ID uint64, tx *sql.Tx) error {
-	return nil
+	stmt, err := tx.Prepare(queryInsertTournament)
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+	_, err = stmt.Exec(ID)
+	if err != nil {
+		return err
+	}
+	pg.Logger.Debugf("Created a new tournament %d", ID)
+	return err
 }
 
 // FindTournament finds existing tournament by specified ID
 func (pg PostgreSQL) FindTournament(ID uint64, tx *sql.Tx) (*model.Tournament, error) {
-	return nil, nil
+	row := tx.QueryRow(queryGetTournament, ID)
+	tournament := &model.Tournament{
+		ID:      ID,
+		Bidders: make([]model.Bidder, 0),
+	}
+	err := row.Scan(&tournament.IsFinished, &tournament.Deposit)
+	if err != nil {
+		return nil, err
+	}
+	rows, err := tx.Query(queryGetBidders, ID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		bidder := model.Bidder{
+			Backers: make([]string, 0),
+		}
+		var backersJSON string
+		if err := rows.Scan(&bidder.ID, &bidder.Winner, &bidder.Prize, &backersJSON); err != nil {
+			return nil, err
+		}
+		err = json.Unmarshal([]byte(backersJSON), &bidder.Backers)
+		if err != nil {
+			return nil, err
+		}
+		tournament.Bidders = append(tournament.Bidders, bidder)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	pg.Logger.Debugf("Found the tournament %d", tournament.ID)
+	return tournament, err
 }
 
 // SaveTournament saves a Tournament model
 func (pg PostgreSQL) SaveTournament(tournament *model.Tournament, tx *sql.Tx) error {
-	return nil
+	stmt, err := tx.Prepare(queryUpdateTournament)
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+	_, err = stmt.Exec(tournament.IsFinished, tournament.Deposit, tournament.ID)
+	if err != nil {
+		return err
+	}
+	for _, bidder := range tournament.Bidders {
+		backers, err := json.Marshal(bidder.Backers)
+		if err != nil {
+			return err
+		}
+		statement, err := tx.Prepare(queryUpsertBidder)
+		if err != nil {
+			return err
+		}
+		_, err = statement.Exec(bidder.ID, tournament.ID, bidder.Winner, bidder.Prize, backers)
+		if err != nil {
+			return err
+		}
+	}
+	pg.Logger.Debugf("Saved the tournament %d", tournament.ID)
+	return err
 }
 
 // Transaction returns DB transaction control
