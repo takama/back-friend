@@ -11,6 +11,7 @@ func (h *Handler) Reset(c bit.Control) {
 	err := h.db.Reset()
 	if err != nil {
 		serviceError(err, c)
+		return
 	}
 	c.Code(http.StatusOK)
 	c.Body(http.StatusText(http.StatusOK))
