@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"encoding/json"
 	"net/http"
+	"strconv"
 
 	"github.com/takama/backer"
 	"github.com/takama/backer/datastore"
@@ -14,6 +15,7 @@ import (
 const (
 	couldNotRecognizeRequestData = "Could not recognize request data"
 	incorrectPointsParameter     = "The Points parameter has incorrect type"
+	incorrectParameter           = " parameter has incorrect type: "
 )
 
 func decodeRecord(record interface{}, c bit.Control) bool {
@@ -52,6 +54,17 @@ func decodeString(name string, c bit.Control) (string, bool) {
 	}
 
 	return str, true
+}
+
+func decodeNumber(name string, c bit.Control) (uint64, bool) {
+	id, err := strconv.ParseUint(c.Query(name), 10, 64)
+	if err != nil {
+		c.Code(http.StatusBadRequest)
+		c.Body(name + incorrectParameter + err.Error())
+		return 0, false
+	}
+
+	return id, true
 }
 
 // isValidString checks that string contains only values
