@@ -49,22 +49,6 @@ GET /api/v1alpha/players/:id
 }
 ```
 
-Players balances
-
-```json
-GET /api/v1alpha/players
-[
-    {
-        "player": "p1",
-        "balance": 456.0
-    },
-    {
-        "player": "p2",
-        "balance": 300.00
-    }
-]
-```
-
 ### Tournaments endpoints
 
 Announce tournament specifying the entry deposit
@@ -106,44 +90,23 @@ Get results of tournament winners and prizes
 GET /api/v1alpha/tournaments/:id
 {
     "tournament": 1,
-    "winners": [
+    "bidders": [
         {
             "player": "p1",
-            "prize": 2000.00
+            "winner": true,
+            "prize": 2000.00,
+            "backers": ["b1", "b2"]
+        },
+        {
+            "player": "p2",
+            "winner": false,
+            "prize": 0.00,
+            "backers": []
         }
     ]
 }
 ```
 
-Get results of tournaments
-
-```json
-GET /api/v1alpha/tournaments
-[
-    {
-        "tournament": 1,
-        "winners": [
-            {
-                "player": "p1",
-                "prize": 2000.00
-            }
-        ]
-    },
-    {
-        "tournament": 2,
-        "winners": [
-            {
-                "player": "p1",
-                "prize": 1000.00
-            },
-            {
-                "player": "p2",
-                "prize": 1000.00
-            }
-        ]
-    }
-]
-```
 
 ### Engine endpoints
 
