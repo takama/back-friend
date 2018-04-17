@@ -14,8 +14,8 @@
 [[projects]]
   name = "github.com/takama/backer"
   packages = [".","datastore","helper","model","player","tournament"]
-  revision = "21747935a4b35cf8daa45b6e0f6bed5ab20bafad"
-  version = "v0.3.8"
+  revision = "c8c0b811906d23f0378aeab5d3752ad447090462"
+  version = "v0.3.9"
 
 [[projects]]
   name = "github.com/takama/bit"
@@ -26,6 +26,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "9a00f5d4845088fb35f41f5c1e0ba018007cb667538dfc8156668d62264c92cb"
+  inputs-digest = "7bc4dade6bb89cf1b48e3d4b13764eaa2886e31314323fa559ddac2b2f2e13a8"
   solver-name = "gps-cdcl"
   solver-version = 1
