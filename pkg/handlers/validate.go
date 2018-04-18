@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/takama/backer"
 	"github.com/takama/backer/datastore"
 
 	"github.com/takama/bit"
@@ -30,22 +29,6 @@ func decodeRecord(record interface{}, c bit.Control) bool {
 	c.Code(http.StatusBadRequest)
 	c.Body(couldNotRecognizeRequestData)
 	return false
-}
-
-func decodePoints(points interface{}, c bit.Control) (backer.Points, bool) {
-	number, ok := points.(json.Number)
-	if !ok {
-		c.Code(http.StatusBadRequest)
-		c.Body(incorrectPointsParameter)
-		return 0, false
-	}
-	p, err := number.Float64()
-	if err != nil {
-		serviceError(err, c)
-		return 0, false
-	}
-
-	return backer.Points(p), true
 }
 
 func decodeString(name string, c bit.Control) (string, bool) {
