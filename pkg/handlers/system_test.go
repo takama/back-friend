@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"errors"
 	"net/http"
 	"testing"
 
@@ -8,9 +9,11 @@ import (
 	"github.com/takama/back-friend/pkg/db"
 )
 
-func TestReady(t *testing.T) {
+var ErrResetFalse = errors.New("Reset false")
+
+func TestReset(t *testing.T) {
 	mock := &db.Mock{
-		OnReady: func() bool { return true },
+		OnReset: func() error { return nil },
 	}
 	conn := &db.Connection{
 		Config:     config.New(),
@@ -20,13 +23,13 @@ func TestReady(t *testing.T) {
 	h := New(conn)
 	testHandlerWithParams(t,
 		nil,
-		h, h.Ready,
+		h, h.Reset,
 		http.StatusOK, http.StatusText(http.StatusOK))
 }
 
-func TestNotReady(t *testing.T) {
+func TestResetFalse(t *testing.T) {
 	mock := &db.Mock{
-		OnReady: func() bool { return false },
+		OnReset: func() error { return ErrResetFalse },
 	}
 	conn := &db.Connection{
 		Config:     config.New(),
@@ -36,6 +39,6 @@ func TestNotReady(t *testing.T) {
 	h := New(conn)
 	testHandlerWithParams(t,
 		nil,
-		h, h.Ready,
-		http.StatusServiceUnavailable, http.StatusText(http.StatusServiceUnavailable))
+		h, h.Reset,
+		http.StatusInternalServerError, ErrResetFalse.Error())
 }

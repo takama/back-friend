@@ -52,11 +52,18 @@ func Run(cfg *config.Config) error {
 	r.GET("/readyz", h.Ready)
 	r.GET("/info", h.Info)
 
-	// Players handlers
 	apiPrefix := "/api/" + config.APIVersion
+
+	// Players handlers
 	r.GET(apiPrefix+"/players/:id", h.PlayerDetails)
 	r.PUT(apiPrefix+"/players/:id/fund", h.PlayerFund)
 	r.PUT(apiPrefix+"/players/:id/take", h.PlayerTake)
+
+	// Tournaments handlers
+	r.GET(apiPrefix+"/tournaments/:id", h.TournamentDetails)
+	r.PUT(apiPrefix+"/tournaments/:id/announce", h.TournamentAnnounce)
+	r.PUT(apiPrefix+"/tournaments/:id/join", h.TournamentJoin)
+	r.POST(apiPrefix+"/tournaments/:id", h.TournamentResult)
 
 	// Service handlers
 	r.PUT(apiPrefix+"/engine/reset", h.Reset)

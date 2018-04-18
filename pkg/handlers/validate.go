@@ -4,8 +4,8 @@ import (
 	"bufio"
 	"encoding/json"
 	"net/http"
+	"strconv"
 
-	"github.com/takama/backer"
 	"github.com/takama/backer/datastore"
 
 	"github.com/takama/bit"
@@ -14,34 +14,21 @@ import (
 const (
 	couldNotRecognizeRequestData = "Could not recognize request data"
 	incorrectPointsParameter     = "The Points parameter has incorrect type"
+	incorrectParameter           = " parameter has incorrect type: "
 )
 
 func decodeRecord(record interface{}, c bit.Control) bool {
-	decoder := json.NewDecoder(bufio.NewReader(c.Request().Body))
-	decoder.UseNumber()
-	if err := decoder.Decode(&record); err != nil {
-		c.Code(http.StatusBadRequest)
-		c.Body(couldNotRecognizeRequestData)
-		return false
+	if record != nil && c.Request().Body != nil {
+		decoder := json.NewDecoder(bufio.NewReader(c.Request().Body))
+		decoder.UseNumber()
+		if err := decoder.Decode(&record); err == nil {
+			return true
+		}
 	}
 
-	return true
-}
-
-func decodePoints(points interface{}, c bit.Control) (backer.Points, bool) {
-	number, ok := points.(json.Number)
-	if !ok {
-		c.Code(http.StatusBadRequest)
-		c.Body(incorrectPointsParameter)
-		return 0, false
-	}
-	p, err := number.Float64()
-	if err != nil {
-		serviceError(err, c)
-		return 0, false
-	}
-
-	return backer.Points(p), true
+	c.Code(http.StatusBadRequest)
+	c.Body(couldNotRecognizeRequestData)
+	return false
 }
 
 func decodeString(name string, c bit.Control) (string, bool) {
@@ -52,6 +39,17 @@ func decodeString(name string, c bit.Control) (string, bool) {
 	}
 
 	return str, true
+}
+
+func decodeNumber(name string, c bit.Control) (uint64, bool) {
+	id, err := strconv.ParseUint(c.Query(name), 10, 64)
+	if err != nil {
+		c.Code(http.StatusBadRequest)
+		c.Body(name + incorrectParameter + err.Error())
+		return 0, false
+	}
+
+	return id, true
 }
 
 // isValidString checks that string contains only values
