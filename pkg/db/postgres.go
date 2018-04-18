@@ -13,19 +13,6 @@ import (
 	"github.com/takama/backer/model"
 )
 
-const (
-	// errorCodeDuplicateDatabase is code when create database but it already exists
-	errorCodeDuplicateDatabase = "42P04"
-	queryGetPlayerBalance      = "SELECT balance FROM players WHERE id = $1"
-	queryInsertPlayer          = "INSERT INTO players (id) VALUES ($1)"
-	queryUpdatePlayer          = "UPDATE players SET balance = $1 WHERE id = $2"
-	queryInsertTournament      = "INSERT INTO tournaments (id) VALUES ($1)"
-	queryGetTournament         = "SELECT is_finished, deposit FROM tournaments WHERE id = $1"
-	queryUpdateTournament      = "UPDATE tournaments SET is_finished = $1, deposit = $2 WHERE id = $3"
-	queryUpsertBidder          = "UPSERT INTO bidders (player_id, tournament_id, winner, prize, backers) VALUES ($1, $2, $3, $4, $5)"
-	queryGetBidders            = "SELECT player_id, winner, prize, backers FROM bidders WHERE tournament_id = $1"
-)
-
 // PostgreSQL implements PostgreSQL driver
 type PostgreSQL struct {
 	logger.Logger
@@ -250,3 +237,16 @@ DROP TABLE IF EXISTS bidders;
 DROP TABLE IF EXISTS tournaments;
 DROP TABLE IF EXISTS players;
 `
+
+const (
+	// errorCodeDuplicateDatabase is code when create database but it already exists
+	errorCodeDuplicateDatabase = "42P04"
+	queryGetPlayerBalance      = "SELECT balance FROM players WHERE id = $1"
+	queryInsertPlayer          = "INSERT INTO players (id) VALUES ($1)"
+	queryUpdatePlayer          = "UPDATE players SET balance = $1 WHERE id = $2"
+	queryInsertTournament      = "INSERT INTO tournaments (id) VALUES ($1)"
+	queryGetTournament         = "SELECT is_finished, deposit FROM tournaments WHERE id = $1"
+	queryUpdateTournament      = "UPDATE tournaments SET is_finished = $1, deposit = $2 WHERE id = $3"
+	queryUpsertBidder          = "UPSERT INTO bidders (player_id, tournament_id, winner, prize, backers) VALUES ($1, $2, $3, $4, $5)"
+	queryGetBidders            = "SELECT player_id, winner, prize, backers FROM bidders WHERE tournament_id = $1"
+)
