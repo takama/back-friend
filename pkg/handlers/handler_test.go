@@ -3,8 +3,10 @@ package handlers
 import (
 	"errors"
 	"fmt"
+	"io"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 
 	"github.com/takama/back-friend/pkg/config"
@@ -16,8 +18,8 @@ import (
 
 var ErrTestError = errors.New("Test Error")
 
-func testHandler(t *testing.T, handler http.HandlerFunc, code int, body string) {
-	req, err := http.NewRequest("GET", "/", nil)
+func testHandler(t *testing.T, handler http.HandlerFunc, reader io.Reader, code int, body string) {
+	req, err := http.NewRequest("GET", "/", reader)
 	if err != nil {
 		t.Error(err)
 	}
@@ -35,14 +37,22 @@ func testHandler(t *testing.T, handler http.HandlerFunc, code int, body string) 
 
 func testHandlerWithParams(t *testing.T, params map[string]string,
 	handler *Handler, control func(bit.Control), code int, body string) {
+	var reader io.Reader
 	wrapHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctrl := bit.NewControl(w, r)
 		for idx, val := range params {
-			ctrl.Params().Set(idx, val)
+			if idx != "data" {
+				ctrl.Params().Set(idx, val)
+			}
 		}
 		handler.Base(control)(ctrl)
 	})
-	testHandler(t, wrapHandler, code, body)
+	for idx, val := range params {
+		if idx == "data" {
+			reader = strings.NewReader(val)
+		}
+	}
+	testHandler(t, wrapHandler, reader, code, body)
 }
 
 func TestRoot(t *testing.T) {
@@ -81,7 +91,7 @@ func TestCollectCodes(t *testing.T) {
 			c.Body(http.StatusText(http.StatusBadGateway))
 		})(bit.NewControl(w, r))
 	})
-	testHandler(t, handler, http.StatusBadGateway, http.StatusText(http.StatusBadGateway))
+	testHandler(t, handler, nil, http.StatusBadGateway, http.StatusText(http.StatusBadGateway))
 
 	handler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		h.Base(func(c bit.Control) {
@@ -89,5 +99,5 @@ func TestCollectCodes(t *testing.T) {
 			c.Body(http.StatusText(http.StatusNotFound))
 		})(bit.NewControl(w, r))
 	})
-	testHandler(t, handler, http.StatusNotFound, http.StatusText(http.StatusNotFound))
+	testHandler(t, handler, nil, http.StatusNotFound, http.StatusText(http.StatusNotFound))
 }
