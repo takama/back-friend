@@ -1,4 +1,11 @@
-# Version v0.2.0
+# Version v0.3.0
+
+## v0.3.0
+
+### Codebase changes in v0.3.0
+
+- Added tournament handlers and test interactions with players ([#16](https://github.com/takama/back-friend/issues/16), [@takama](https://github.com/takama))
+- Integrated backer package and added player handlers ([#15](https://github.com/takama/back-friend/issues/15), [@takama](https://github.com/takama))
 
 ## v0.2.0
 
