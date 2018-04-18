@@ -6,7 +6,6 @@ import (
 
 	"github.com/takama/back-friend/pkg/config"
 	"github.com/takama/back-friend/pkg/db"
-	"github.com/takama/bit"
 )
 
 func TestReady(t *testing.T) {
@@ -19,11 +18,10 @@ func TestReady(t *testing.T) {
 		Store:      mock,
 	}
 	h := New(conn)
-	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		h.Base(h.Ready)(bit.NewControl(w, r))
-	})
-
-	testHandler(t, handler, http.StatusOK, http.StatusText(http.StatusOK))
+	testHandlerWithParams(t,
+		nil,
+		h, h.Ready,
+		http.StatusOK, http.StatusText(http.StatusOK))
 }
 
 func TestNotReady(t *testing.T) {
@@ -36,10 +34,8 @@ func TestNotReady(t *testing.T) {
 		Store:      mock,
 	}
 	h := New(conn)
-	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		h.Base(h.Ready)(bit.NewControl(w, r))
-	})
-
-	testHandler(t, handler, http.StatusServiceUnavailable,
-		http.StatusText(http.StatusServiceUnavailable))
+	testHandlerWithParams(t,
+		nil,
+		h, h.Ready,
+		http.StatusServiceUnavailable, http.StatusText(http.StatusServiceUnavailable))
 }

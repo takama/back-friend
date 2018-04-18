@@ -7,7 +7,6 @@ import (
 
 	"github.com/takama/back-friend/pkg/config"
 	"github.com/takama/back-friend/pkg/db"
-	"github.com/takama/bit"
 )
 
 var ErrResetFalse = errors.New("Reset false")
@@ -22,11 +21,10 @@ func TestReset(t *testing.T) {
 		Store:      mock,
 	}
 	h := New(conn)
-	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		h.Base(h.Reset)(bit.NewControl(w, r))
-	})
-
-	testHandler(t, handler, http.StatusOK, http.StatusText(http.StatusOK))
+	testHandlerWithParams(t,
+		nil,
+		h, h.Reset,
+		http.StatusOK, http.StatusText(http.StatusOK))
 }
 
 func TestResetFalse(t *testing.T) {
@@ -39,9 +37,8 @@ func TestResetFalse(t *testing.T) {
 		Store:      mock,
 	}
 	h := New(conn)
-	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		h.Base(h.Reset)(bit.NewControl(w, r))
-	})
-
-	testHandler(t, handler, http.StatusInternalServerError, ErrResetFalse.Error())
+	testHandlerWithParams(t,
+		nil,
+		h, h.Reset,
+		http.StatusInternalServerError, ErrResetFalse.Error())
 }

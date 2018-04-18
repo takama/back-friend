@@ -8,7 +8,6 @@ import (
 	"github.com/takama/back-friend/pkg/db"
 
 	"github.com/takama/backer/datastore"
-	"github.com/takama/bit"
 )
 
 func TestPlayerDetails(t *testing.T) {
@@ -20,37 +19,42 @@ func TestPlayerDetails(t *testing.T) {
 		Store:      stub,
 	}
 	h := New(conn)
-	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		ctrl := bit.NewControl(w, r)
-		ctrl.Params().Set(":id", "not-existing")
-		h.Base(h.PlayerDetails)(ctrl)
-	})
 
-	testHandler(t, handler, http.StatusNotFound, datastore.ErrRecordNotFound.Error())
+	testHandlerWithParams(t,
+		map[string]string{":id": ""},
+		h, h.PlayerDetails,
+		http.StatusBadRequest, http.StatusText(http.StatusBadRequest))
 
-	handler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		ctrl := bit.NewControl(w, r)
-		ctrl.Params().Set(":id", "")
-		h.Base(h.PlayerDetails)(ctrl)
-	})
-
-	testHandler(t, handler, http.StatusBadRequest, http.StatusText(http.StatusBadRequest))
+	testHandlerWithParams(t,
+		map[string]string{":id": "not-existing"},
+		h, h.PlayerDetails,
+		http.StatusNotFound, datastore.ErrRecordNotFound.Error())
 
 	stub.NewPlayer("p1", nil)
-	handler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		ctrl := bit.NewControl(w, r)
-		ctrl.Params().Set(":id", "p1")
-		h.Base(h.PlayerDetails)(ctrl)
-	})
-
-	testHandler(t, handler, http.StatusOK, `{"id":"p1","balance":0}`)
+	testHandlerWithParams(t,
+		map[string]string{":id": "p1"},
+		h, h.PlayerDetails,
+		http.StatusOK, `{"id":"p1","balance":0}`)
 
 	stub.ErrFind = append(stub.ErrFind, ErrTestError)
-	handler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		ctrl := bit.NewControl(w, r)
-		ctrl.Params().Set(":id", "p1")
-		h.Base(h.PlayerDetails)(ctrl)
-	})
+	testHandlerWithParams(t,
+		map[string]string{":id": "p1"},
+		h, h.PlayerDetails,
+		http.StatusInternalServerError, ErrTestError.Error())
+}
 
-	testHandler(t, handler, http.StatusInternalServerError, ErrTestError.Error())
+func TestPlayerFund(t *testing.T) {
+	stub := new(datastore.Stub)
+	stub.Reset()
+	conn := &db.Connection{
+		Config:     config.New(),
+		Controller: stub,
+		Store:      stub,
+	}
+	h := New(conn)
+
+	testHandlerWithParams(t,
+		map[string]string{":id": ""},
+		h, h.PlayerFund,
+		http.StatusBadRequest, http.StatusText(http.StatusBadRequest))
 }

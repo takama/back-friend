@@ -6,7 +6,6 @@ import (
 
 	"github.com/takama/back-friend/pkg/config"
 	"github.com/takama/back-friend/pkg/db"
-	"github.com/takama/bit"
 )
 
 func TestHealth(t *testing.T) {
@@ -15,9 +14,8 @@ func TestHealth(t *testing.T) {
 		Controller: new(db.Mock),
 	}
 	h := New(conn)
-	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		h.Base(h.Health)(bit.NewControl(w, r))
-	})
-
-	testHandler(t, handler, http.StatusOK, http.StatusText(http.StatusOK))
+	testHandlerWithParams(t,
+		nil,
+		h, h.Health,
+		http.StatusOK, http.StatusText(http.StatusOK))
 }
