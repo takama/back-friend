@@ -19,15 +19,17 @@ const (
 )
 
 func decodeRecord(record interface{}, c bit.Control) bool {
-	decoder := json.NewDecoder(bufio.NewReader(c.Request().Body))
-	decoder.UseNumber()
-	if err := decoder.Decode(&record); err != nil {
-		c.Code(http.StatusBadRequest)
-		c.Body(couldNotRecognizeRequestData)
-		return false
+	if record != nil && c.Request().Body != nil {
+		decoder := json.NewDecoder(bufio.NewReader(c.Request().Body))
+		decoder.UseNumber()
+		if err := decoder.Decode(&record); err == nil {
+			return true
+		}
 	}
 
-	return true
+	c.Code(http.StatusBadRequest)
+	c.Body(couldNotRecognizeRequestData)
+	return false
 }
 
 func decodePoints(points interface{}, c bit.Control) (backer.Points, bool) {
