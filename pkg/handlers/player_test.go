@@ -59,6 +59,12 @@ func TestPlayerFund(t *testing.T) {
 		h, h.PlayerFund,
 		http.StatusBadRequest, http.StatusText(http.StatusBadRequest))
 
+	stub.ErrNew = append(stub.ErrNew, ErrTestError)
+	testHandlerWithParams(t,
+		map[string]string{":id": "p1"},
+		h, h.PlayerFund,
+		http.StatusInternalServerError, ErrTestError.Error())
+
 	testHandlerWithParams(t,
 		map[string]string{":id": "p1"},
 		h, h.PlayerFund,
@@ -103,6 +109,11 @@ func TestPlayerTake(t *testing.T) {
 		http.StatusNotFound, datastore.ErrRecordNotFound.Error())
 
 	stub.NewPlayer("p1", nil)
+	testHandlerWithParams(t,
+		map[string]string{":id": "p1"},
+		h, h.PlayerTake,
+		http.StatusBadRequest, couldNotRecognizeRequestData)
+
 	stub.ErrFind = append(stub.ErrFind, ErrTestError)
 	testHandlerWithParams(t,
 		map[string]string{":id": "p1"},
