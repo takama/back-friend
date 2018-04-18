@@ -57,4 +57,15 @@ func TestPlayerFund(t *testing.T) {
 		map[string]string{":id": ""},
 		h, h.PlayerFund,
 		http.StatusBadRequest, http.StatusText(http.StatusBadRequest))
+
+	testHandlerWithParams(t,
+		map[string]string{":id": "p1"},
+		h, h.PlayerFund,
+		http.StatusBadRequest, couldNotRecognizeRequestData)
+
+	stub.ErrFind = append(stub.ErrFind, ErrTestError)
+	testHandlerWithParams(t,
+		map[string]string{":id": "p1"},
+		h, h.PlayerFund,
+		http.StatusInternalServerError, ErrTestError.Error())
 }
