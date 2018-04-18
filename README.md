@@ -7,6 +7,20 @@
 
 Back a friend service: used [backer](https://github.com/takama/backer) package/library
 
+## Installation
+
+Build and run
+
+```sh
+make run
+```
+
+Or pull from docker registry and run
+
+```sh
+docker-compose up -d
+```
+
 ## Known restrictions
 
 1. A several verifications of input attributes skipped due to complicating the task
