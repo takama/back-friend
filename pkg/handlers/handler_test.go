@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
@@ -12,6 +13,8 @@ import (
 
 	"github.com/takama/bit"
 )
+
+var ErrTestError = errors.New("Test Error")
 
 func testHandler(t *testing.T, handler http.HandlerFunc, code int, body string) {
 	req, err := http.NewRequest("GET", "/", nil)

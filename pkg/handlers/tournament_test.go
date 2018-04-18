@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"errors"
 	"net/http"
 	"testing"
 
@@ -9,8 +8,6 @@ import (
 	"github.com/takama/back-friend/pkg/db"
 	"github.com/takama/backer/datastore"
 )
-
-var ErrTestError = errors.New("Test Error")
 
 func TestTournamentDetails(t *testing.T) {
 	stub := new(datastore.Stub)
